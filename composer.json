@@ -1,0 +1,19 @@
+{
+  "name": "julianseeger/permutator",
+  "description": "description_text",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "author's name",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "*",
+    "phpunit/php-code-coverage": "*"
+  },
+  "autoload": {
+    "psr-4": {"Permutator\\": "Permutator/"}
+  }
+}
