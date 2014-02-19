@@ -1,0 +1,4 @@
+RealCoveragePrototype
+=====================
+
+Just a prototype!
