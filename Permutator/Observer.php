@@ -10,5 +10,5 @@ namespace Permutator;
 
 
 interface Observer {
-    public function update();
+    public function update($observable);
 } 

@@ -127,9 +127,10 @@ class CoveredClass implements Observer {
         return $this->lines;
     }
 
-    public function update()
+    public function update($observable)
     {
-        $this->writeToFile();
+        if (!($observable instanceof CoveredLine))
+            return;
     }
 
     public function generateCoveredLinesArray()
@@ -151,5 +152,6 @@ class CoveredClass implements Observer {
     {
         foreach ($this->coveredLines as $line)
             $line->setCommentedOut(false);
+        $this->writeToFile();
     }
 }

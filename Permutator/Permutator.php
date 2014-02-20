@@ -36,7 +36,6 @@ class Permutator {
 
         $class = new CoveredClass($file, $coveredLines);
         foreach ($class->getCoveredLines() as $lineNumber => $line) {
-            echo $lineNumber . " => " . is_null($line) . "\n";
             $this->testLine($class, $line);
         }
 
@@ -49,15 +48,15 @@ class Permutator {
     private function testLine(CoveredClass $class, CoveredLine $line)
     {
         $line->setCommentedOut(true);
-        $class->writeToFile();
         $this->testPreviousLinesInDependency($class, $line);
         if ($line->isNeccessary()) {
+            $class->writeToFile();
             $this->testNeccessityOfLineAtCurrentState($line);
         }
 
         if ($line->isNeccessary()) {
             $line->setCommentedOut(false);
-            $class->writeToFile();
+            $this->testPreviousLinesInDependency($class, $line);
         }
     }
 

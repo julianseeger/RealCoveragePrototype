@@ -42,7 +42,7 @@ class ExecutableLine extends AbstractLine {
     private function notifyObservers()
     {
         foreach ($this->observers as $observer) {
-            $observer->update();
+            $observer->update($this);
         }
     }
 }
