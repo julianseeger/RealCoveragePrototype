@@ -143,7 +143,7 @@ class CoveredClass implements Observer {
             if ($line instanceof CoveredLine && $line->isNeccessary())
                 $result[$lineNumber] = $line->getTests();
             else
-                $result[$lineNumber] = null;
+                $result[$lineNumber] = array();
         }
         return $result;
     }
