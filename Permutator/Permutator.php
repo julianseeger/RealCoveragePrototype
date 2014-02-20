@@ -26,8 +26,8 @@ class Permutator {
         }
         $coverage->setData($coverageData);
 
-        $coverageGenerator = new \PHP_CodeCoverage_Report_HTML();
-        $coverageGenerator->process($coverage, 'html');
+        //$coverageGenerator = new \PHP_CodeCoverage_Report_HTML();
+        //$coverageGenerator->process($coverage, 'html');
     }
 
     private function permutateFile($file, $coveredLines)
@@ -40,17 +40,9 @@ class Permutator {
             $this->testLine($class, $line);
         }
 
-        foreach ($class->getLines() as $line) {
-            if ($line instanceof ExecutableLine) {
-                $line->setCommentedOut(false);
-            }
-            if ($line instanceof CoveredLine) {
-                if (!$line->isNeccessary())
-                    echo "//";
-                echo "+";
-            }
-            echo $line->getLine() . "\n";
-        }
+        $class->reset();
+
+        $this->printResultFile($class);
         return $class;
     }
 
@@ -58,10 +50,10 @@ class Permutator {
     {
         $line->setCommentedOut(true);
         $class->writeToFile();
+        $this->testPreviousLinesInDependency($class, $line);
         if ($line->isNeccessary()) {
             $this->testNeccessityOfLineAtCurrentState($line);
         }
-        $this->testPreviousLinesInDependency($class, $line);
 
         if ($line->isNeccessary()) {
             $line->setCommentedOut(false);
@@ -75,14 +67,6 @@ class Permutator {
         $command .= $this->baseCommand . " --filter ^" . $coveringTest . "$" . " test";
         exec($command, $output, $return);
         return $return === 0;
-    }
-
-    private function getLine($file, $line)
-    {
-        $offset = $line-1;
-        $content = file_get_contents($file);
-        $lines = explode("\n", $content);
-        return $lines[$offset];
     }
 
     /**
@@ -107,15 +91,31 @@ class Permutator {
     {
         try {
             //the following commented out lines may speed it up but will make it very broad
-            if ($line->isNeccessary())
-                return;
-
             if (!($line instanceof CoveredLine))
-               return;
+               die('tested an uncovered line? omg');
+
             $line1 = $class->getPreviousCoveredLine($line->getLineNumber());
             if ($line1 instanceof CoveredLine)
                 $this->testLine($class, $line1);
         } catch (\Exception $e) {
+        }
+    }
+
+    /**
+     * @param $class
+     */
+    private function printResultFile($class)
+    {
+        foreach ($class->getLines() as $line) {
+            if ($line instanceof ExecutableLine) {
+                $line->setCommentedOut(false);
+            }
+            if ($line instanceof CoveredLine) {
+                if (!$line->isNeccessary())
+                    echo "//";
+                echo "+";
+            }
+            echo $line->getLine() . "\n";
         }
     }
 }

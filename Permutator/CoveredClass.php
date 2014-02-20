@@ -15,7 +15,7 @@ use Permutator\Line\NotExecutableLine;
 
 class CoveredClass implements Observer {
     /**
-     * @var array
+     * @var CoveredLine[]
      */
     private $coveredLines;
 
@@ -69,14 +69,8 @@ class CoveredClass implements Observer {
      */
     private function parseLine($lineNumber, $coverage, $line)
     {
-        if (!isset($coverage[$lineNumber]))
+        if (!isset($coverage[$lineNumber]) || is_null($coverage[$lineNumber]))
             return new NotExecutableLine($line, $lineNumber);
-
-        if (!$coverage) {
-            $executableLine = new ExecutableLine($line, $lineNumber);
-            $executableLine->addObserver($this);
-            return $executableLine;
-        }
 
         return $this->createCoveredLine($lineNumber, $coverage[$lineNumber], $line);
     }
@@ -151,5 +145,11 @@ class CoveredClass implements Observer {
                 $result[$lineNumber] = null;
         }
         return $result;
+    }
+
+    public function reset()
+    {
+        foreach ($this->coveredLines as $line)
+            $line->setCommentedOut(false);
     }
 }
