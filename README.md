@@ -14,7 +14,7 @@ Algorithm
 =========
 The basic idea:
 
-{{{
+```
 for each tested class
     for each line in this class
         comment out the line
@@ -26,4 +26,4 @@ for each tested class
         end if
     end for
 end for
-}}}
+```
